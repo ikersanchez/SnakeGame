@@ -88,11 +88,8 @@ def seed_data():
             
         db_session.commit()
 
-# Initialize seed data if not imported as a module (optional, still runs on import currently)
-if __name__ == "__main__":
-    print("Initializing and seeding database...")
+# Initialize seed data on import (wrapped in try-except for robustness)
+try:
     seed_data()
-    print("Done.")
-else:
-    # Initialize seed data on import
-    seed_data()
+except Exception as e:
+    print(f"Warning: Could not seed data on startup: {e}")
