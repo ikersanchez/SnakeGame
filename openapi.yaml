@@ -1,0 +1,176 @@
+openapi: 3.0.0
+info:
+  title: Snake Game API
+  description: Backend API for the Multi-mode Snake Game with Auth, Leaderboard, and Spectating.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local Development Server
+
+paths:
+  /auth/signup:
+    post:
+      summary: Register a new user
+      operationId: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+              properties:
+                username:
+                  type: string
+                  example: "VenomStrike"
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input or username already exists
+        '500':
+          description: Server error
+
+  /auth/login:
+    post:
+      summary: Login an existing user
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+              properties:
+                username:
+                  type: string
+                  example: "VenomStrike"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+        '401':
+          description: Invalid credentials (if password implemented later)
+
+  /leaderboard:
+    get:
+      summary: Get top scores
+      operationId: getLeaderboard
+      responses:
+        '200':
+          description: A list of top scores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Score'
+    post:
+      summary: Submit a new score
+      operationId: submitScore
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - score
+              properties:
+                username:
+                  type: string
+                score:
+                  type: integer
+      responses:
+        '200':
+          description: Score submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Score'
+
+  /spectate/state:
+    get:
+      summary: Get current state of a live game for spectating
+      description: Returns the current snapshot of a featured game to be displayed in spectator mode.
+      operationId: getSpectateState
+      responses:
+        '200':
+          description: Current game state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpectateState'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+      required:
+        - id
+        - username
+
+    Score:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        score:
+          type: integer
+      required:
+        - id
+        - username
+        - score
+
+    Point:
+      type: object
+      properties:
+        x:
+          type: integer
+        y:
+          type: integer
+      required:
+        - x
+        - y
+
+    SpectateState:
+      type: object
+      description: A snapshot of the game state for spectators
+      properties:
+        snake:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+        food:
+          $ref: '#/components/schemas/Point'
+        score:
+          type: integer
+        username:
+          type: string
+      required:
+        - snake
+        - food
+        - score
+        - username

@@ -1,0 +1,23 @@
+{
+    "name": "snakepro",
+    "version": "1.0.0",
+    "description": "Multi-mode Snake Game with FastAPI backend and React frontend",
+    "private": true,
+    "scripts": {
+        "dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\" --names \"backend,frontend\" --prefix-colors \"cyan,magenta\"",
+        "dev:backend": "cd backend && make dev",
+        "dev:frontend": "cd frontend && npm run dev",
+        "build:frontend": "cd frontend && npm run build",
+        "test:backend": "cd backend && make test",
+        "test": "npm run test:backend"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.0"
+    },
+    "keywords": [
+        "snake-game",
+        "fastapi",
+        "react",
+        "typescript"
+    ]
+}
