@@ -4,10 +4,10 @@ FROM node:20-slim AS build
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json* ./
 
 # Install dependencies
-RUN npm ci
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 # Copy source code
 COPY . .
